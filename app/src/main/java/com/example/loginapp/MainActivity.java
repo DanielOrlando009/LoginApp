@@ -43,18 +43,6 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (txtUsername.getText().toString().equals("admin") && txtPassword.getText().toString().equals("admin")) {
-//                    //correct password
-//                    Toast.makeText(MainActivity.this, "LOGIN SUCCESS", Toast.LENGTH_SHORT).show();
-//
-//                    openLoggedAdminActivity();
-//                } else if (txtUsername.getText().toString().equals("student") && txtPassword.getText().toString().equals("student")) {
-//                    Toast.makeText(MainActivity.this, "LOGIN SUCCESS", Toast.LENGTH_SHORT).show();
-//
-//                    openLoggedStudentActivity();
-//                } else {
-//                    Toast.makeText(MainActivity.this, "LOGIN FAILED", Toast.LENGTH_SHORT).show();
-//                }
 
                 getUserDetails();
             }
@@ -81,8 +69,16 @@ public class MainActivity extends AppCompatActivity {
             protected void onPostExecute(Void result) {
                 if(login)
                 {
-                    openLoggedStudentActivity();
-                    Toast.makeText(MainActivity.this, temp, Toast.LENGTH_SHORT).show();
+                    if(temp.equalsIgnoreCase("admin"))
+                    {
+                        openLoggedAdminActivity();
+                    }
+                    else if(temp.equalsIgnoreCase("student"))
+                    {
+                        openLoggedStudentActivity();
+                    }
+
+                    Toast.makeText(MainActivity.this, "LOGIN SUCCESS", Toast.LENGTH_SHORT).show();
 
                 }
                 else
@@ -102,11 +98,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             String apiEndpoint = "http://169.0.125.182:44444/api/mobile/login/";
-            //api/login/admin@uj/admin
-            //api/student/login/studentno/pass(Stu NO)
+
             try {
-                // Construct the API URL for user details
-                //String userDetailsUrl = apiEndpoint + "/api/students";
 
                 //api/mobile/login/(Admin Email/Stu No)/password
 
@@ -131,9 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Check if the response code indicates success
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    //System.out.println("Success");
 
-                    //openLoggedStudentActivity();
                     // Read the response from the API
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     String line;
@@ -151,19 +142,21 @@ public class MainActivity extends AppCompatActivity {
 
                     if(jObj.getBoolean("status"))
                     {
+                        login = true;
 
+                        if(jObj.getString("message").equalsIgnoreCase("Admin"))
+                        {
+                            temp = "admin";
+                        }
+                        else
+                        {
+                            temp = "student";
+                        }
                     }
 
 
+                    //System.out.println(jObj.getString("message"));
 
-
-                    //jObj.getString("message");
-
-                    jObj.getJSONObject("obj");
-                    jObj.getBoolean("status");
-
-                    System.out.println(jObj.getString("message"));
-                    temp = userDetailsJson;
                     login = jObj.getBoolean("status");;
 
                 } else {

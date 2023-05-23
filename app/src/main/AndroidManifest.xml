@@ -37,9 +37,6 @@
             android:name=".LoggedStudentActivity"
             android:exported="false" />
         <activity
-            android:name=".ScannerActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
